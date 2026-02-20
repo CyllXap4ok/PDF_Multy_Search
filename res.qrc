@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/add_icon.svg</file>
+    <file>icons/cancel_icon.svg</file>
+    <file>icons/delete_icon.svg</file>
+    <file>icons/search_icon.svg</file>
+    <file>icons/pdf_file_icon.svg</file>
+    <file>icons/deselect_icon.svg</file>
+  </qresource>
+</RCC>
