@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>168</width>
+    <width>170</width>
     <height>170</height>
    </rect>
   </property>
@@ -18,19 +18,19 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>150</width>
+    <width>170</width>
     <height>170</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>168</width>
+    <width>170</width>
     <height>170</height>
    </size>
   </property>
   <property name="baseSize">
    <size>
-    <width>150</width>
+    <width>170</width>
     <height>170</height>
    </size>
   </property>
@@ -49,75 +49,21 @@ QFrame:hover {
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
-   <item alignment="Qt::AlignmentFlag::AlignRight">
-    <widget class="QCheckBox" name="select_file">
-     <property name="minimumSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="baseSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QCheckBox {
-    background: transparent;
-	color: white;
-	border:none;
-}
-
-QCheckBox:indicator {
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    border: 1px solid gray;
-	border-radius: 10px;
-}
-
-QCheckBox::indicator:checked {
-    background-color: rgb(104, 186, 123);
-	border: 1px solid gray;
-	border-radius: 10px;
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+   <item alignment="Qt::AlignmentFlag::AlignHCenter">
     <widget class="QLabel" name="file_icon">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -174,30 +120,44 @@ margin-top:-18px;</string>
      </property>
      <property name="minimumSize">
       <size>
-       <width>150</width>
+       <width>160</width>
        <height>30</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>150</width>
+       <width>160</width>
        <height>30</height>
       </size>
      </property>
      <property name="baseSize">
       <size>
-       <width>150</width>
+       <width>160</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">background:transparent;</string>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Plain</enum>
+     </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>Документ...pdf</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::TextInteractionFlag::NoTextInteraction</set>
      </property>
     </widget>
    </item>
