@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>727</width>
-    <height>590</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>727</width>
-    <height>590</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="baseSize">
    <size>
-    <width>727</width>
-    <height>590</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,14 +28,14 @@
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
     <size>
-     <width>719</width>
-     <height>590</height>
+     <width>727</width>
+     <height>550</height>
     </size>
    </property>
    <property name="baseSize">
     <size>
-     <width>719</width>
-     <height>590</height>
+     <width>727</width>
+     <height>550</height>
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">

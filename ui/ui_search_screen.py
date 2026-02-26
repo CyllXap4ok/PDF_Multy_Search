@@ -16,22 +16,28 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QFrame, QGroupBox,
-    QHBoxLayout, QListView, QPlainTextEdit, QPushButton,
+    QHBoxLayout, QPlainTextEdit, QPushButton, QScrollArea,
     QSizePolicy, QVBoxLayout, QWidget)
+import res_rc
 
 class Ui_GroupBox(object):
     def setupUi(self, GroupBox):
         if not GroupBox.objectName():
             GroupBox.setObjectName(u"GroupBox")
-        GroupBox.resize(832, 492)
+        GroupBox.resize(727, 550)
+        GroupBox.setMinimumSize(QSize(727, 550))
+        GroupBox.setBaseSize(QSize(727, 550))
         GroupBox.setStyleSheet(u"background-color: rgb(30, 30, 30);\n"
 "border:none;")
         GroupBox.setInputMethodHints(Qt.InputMethodHint.ImhNone)
         self.verticalLayout = QVBoxLayout(GroupBox)
+        self.verticalLayout.setSpacing(5)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(15, 10, 0, 10)
         self.search_window_top_bar = QHBoxLayout()
         self.search_window_top_bar.setSpacing(5)
         self.search_window_top_bar.setObjectName(u"search_window_top_bar")
+        self.search_window_top_bar.setContentsMargins(-1, -1, 16, -1)
         self.return_button = QPushButton(GroupBox)
         self.return_button.setObjectName(u"return_button")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -73,7 +79,7 @@ class Ui_GroupBox(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy1)
-        self.frame.setMinimumSize(QSize(700, 30))
+        self.frame.setMinimumSize(QSize(0, 30))
         self.frame.setMaximumSize(QSize(16777215, 30))
         self.frame.setBaseSize(QSize(700, 0))
         self.frame.setStyleSheet(u"background-color:rgb(60, 60, 60);\n"
@@ -88,9 +94,9 @@ class Ui_GroupBox(object):
         self.plainTextEdit.setObjectName(u"plainTextEdit")
         sizePolicy1.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
         self.plainTextEdit.setSizePolicy(sizePolicy1)
-        self.plainTextEdit.setMinimumSize(QSize(640, 30))
+        self.plainTextEdit.setMinimumSize(QSize(0, 30))
         self.plainTextEdit.setMaximumSize(QSize(16777215, 30))
-        self.plainTextEdit.setBaseSize(QSize(640, 30))
+        self.plainTextEdit.setBaseSize(QSize(0, 30))
         font1 = QFont()
         font1.setPointSize(10)
         self.plainTextEdit.setFont(font1)
@@ -165,12 +171,16 @@ class Ui_GroupBox(object):
 
         self.verticalLayout.addLayout(self.search_window_top_bar)
 
-        self.found_list = QListView(GroupBox)
-        self.found_list.setObjectName(u"found_list")
-        self.found_list.setStyleSheet(u"background:transparent;\n"
-"border:0px;")
+        self.scrollArea = QScrollArea(GroupBox)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
+        self.search_list = QWidget()
+        self.search_list.setObjectName(u"search_list")
+        self.search_list.setGeometry(QRect(0, 0, 712, 493))
+        self.scrollArea.setWidget(self.search_list)
 
-        self.verticalLayout.addWidget(self.found_list)
+        self.verticalLayout.addWidget(self.scrollArea)
 
 
         self.retranslateUi(GroupBox)
