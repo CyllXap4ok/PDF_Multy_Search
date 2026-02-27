@@ -133,7 +133,8 @@ class FileSelectionScreen(QGroupBox):
         self.ui.selection_cancel_button.clicked.connect(self.cancel_selection)
         self.ui.delete_button.clicked.connect(self.delete_selected)
         self.ui.button_next.clicked.connect(
-            lambda: self.next_clicked.emit([card.get_file_path() for card in self.file_cards]))
+            lambda: self.next_clicked.emit([card.get_file_path() for card in self.file_cards])
+        )
 
         self.is_selection_state = False
 

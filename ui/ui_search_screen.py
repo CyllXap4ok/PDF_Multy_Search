@@ -15,29 +15,29 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QFrame, QGroupBox,
-    QHBoxLayout, QPlainTextEdit, QPushButton, QScrollArea,
-    QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGroupBox, QHBoxLayout,
+    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
+    QVBoxLayout, QWidget)
 import res_rc
 
 class Ui_GroupBox(object):
     def setupUi(self, GroupBox):
         if not GroupBox.objectName():
             GroupBox.setObjectName(u"GroupBox")
-        GroupBox.resize(727, 550)
-        GroupBox.setMinimumSize(QSize(727, 550))
-        GroupBox.setBaseSize(QSize(727, 550))
+        GroupBox.resize(719, 507)
+        GroupBox.setMinimumSize(QSize(0, 0))
+        GroupBox.setBaseSize(QSize(0, 0))
         GroupBox.setStyleSheet(u"background-color: rgb(30, 30, 30);\n"
 "border:none;")
         GroupBox.setInputMethodHints(Qt.InputMethodHint.ImhNone)
         self.verticalLayout = QVBoxLayout(GroupBox)
         self.verticalLayout.setSpacing(5)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(15, 10, 0, 10)
+        self.verticalLayout.setContentsMargins(12, 10, 0, 10)
         self.search_window_top_bar = QHBoxLayout()
         self.search_window_top_bar.setSpacing(5)
         self.search_window_top_bar.setObjectName(u"search_window_top_bar")
-        self.search_window_top_bar.setContentsMargins(-1, -1, 16, -1)
+        self.search_window_top_bar.setContentsMargins(-1, -1, 12, -1)
         self.return_button = QPushButton(GroupBox)
         self.return_button.setObjectName(u"return_button")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -81,7 +81,7 @@ class Ui_GroupBox(object):
         self.frame.setSizePolicy(sizePolicy1)
         self.frame.setMinimumSize(QSize(0, 30))
         self.frame.setMaximumSize(QSize(16777215, 30))
-        self.frame.setBaseSize(QSize(700, 0))
+        self.frame.setBaseSize(QSize(0, 0))
         self.frame.setStyleSheet(u"background-color:rgb(60, 60, 60);\n"
 "border-radius:5px;")
         self.frame.setFrameShape(QFrame.Shape.NoFrame)
@@ -90,29 +90,24 @@ class Ui_GroupBox(object):
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.plainTextEdit = QPlainTextEdit(self.frame)
-        self.plainTextEdit.setObjectName(u"plainTextEdit")
-        sizePolicy1.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.plainTextEdit.setSizePolicy(sizePolicy1)
-        self.plainTextEdit.setMinimumSize(QSize(0, 30))
-        self.plainTextEdit.setMaximumSize(QSize(16777215, 30))
-        self.plainTextEdit.setBaseSize(QSize(0, 30))
+        self.search_field = QLineEdit(self.frame)
+        self.search_field.setObjectName(u"search_field")
+        sizePolicy1.setHeightForWidth(self.search_field.sizePolicy().hasHeightForWidth())
+        self.search_field.setSizePolicy(sizePolicy1)
+        self.search_field.setMinimumSize(QSize(0, 30))
+        self.search_field.setMaximumSize(QSize(16777215, 30))
+        self.search_field.setBaseSize(QSize(0, 30))
         font1 = QFont()
         font1.setPointSize(10)
-        self.plainTextEdit.setFont(font1)
-        self.plainTextEdit.setStyleSheet(u"color:white;\n"
-"padding-left:5px;\n"
-"padding-top:2px;")
-        self.plainTextEdit.setInputMethodHints(Qt.InputMethodHint.ImhNone)
-        self.plainTextEdit.setFrameShape(QFrame.Shape.NoFrame)
-        self.plainTextEdit.setFrameShadow(QFrame.Shadow.Sunken)
-        self.plainTextEdit.setLineWidth(1)
-        self.plainTextEdit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.plainTextEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.plainTextEdit.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
-        self.plainTextEdit.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
+        self.search_field.setFont(font1)
+        self.search_field.setStyleSheet(u"color: white;\n"
+"padding-left: 5px;\n"
+"padding-top: -2px;")
+        self.search_field.setMaxLength(1000)
+        self.search_field.setFrame(False)
+        self.search_field.setClearButtonEnabled(False)
 
-        self.horizontalLayout_2.addWidget(self.plainTextEdit)
+        self.horizontalLayout_2.addWidget(self.search_field)
 
         self.clear_search_button = QPushButton(self.frame)
         self.clear_search_button.setObjectName(u"clear_search_button")
@@ -173,11 +168,47 @@ class Ui_GroupBox(object):
 
         self.scrollArea = QScrollArea(GroupBox)
         self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setMinimumSize(QSize(707, 450))
+        self.scrollArea.setBaseSize(QSize(707, 450))
+        self.scrollArea.setStyleSheet(u"QScrollBar:vertical {\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    width: 12px;\n"
+"    margin: 0px 3px 0px 4px;\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u0432\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u0441\u043a\u0440\u043e\u043b\u043b\u0431\u0430\u0440\u0430 */\n"
+"QScrollBar::handle:vertical {\n"
+"    background: rgb(60, 60, 60);\n"
+"    min-height: 20px;\n"
+"    border-radius: 2px;\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u043f\u0440\u0438 \u043d\u0430\u0432\u0435\u0434\u0435\u043d\u0438\u0438 */\n"
+"QScrollBar::handle:vertical:hover {\n"
+"    background: rgb(70, 70, 70)\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u043f\u0440\u0438 \u043d\u0430\u0436\u0430\u0442\u0438\u0438 */\n"
+"QScrollBar::handle:vertical:pressed {\n"
+"    background: rgb(80, 80, 80);\n"
+"}\n"
+"\n"
+"/* \u0421\u0442\u0440\u0435\u043b\u043a\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437 */\n"
+"QScr"
+                        "ollBar::sub-line:vertical, QScrollBar::add-line:vertical {\n"
+"    height: 0px;\n"
+"}\n"
+"\n"
+"/* \u0423\u0431\u0438\u0440\u0430\u0435\u043c \u0444\u043e\u043d \u043c\u0435\u0436\u0434\u0443 \u043f\u043e\u043b\u0437\u0443\u043d\u043a\u043e\u043c \u0438 \u0441\u0442\u0440\u0435\u043b\u043a\u0430\u043c\u0438 */\n"
+"QScrollBar::sub-page:vertical, QScrollBar::add-page:vertical {\n"
+"    background: transparent;\n"
+"}")
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scrollArea.setWidgetResizable(True)
         self.search_list = QWidget()
         self.search_list.setObjectName(u"search_list")
-        self.search_list.setGeometry(QRect(0, 0, 712, 493))
+        self.search_list.setGeometry(QRect(0, 0, 707, 450))
         self.scrollArea.setWidget(self.search_list)
 
         self.verticalLayout.addWidget(self.scrollArea)
@@ -191,8 +222,7 @@ class Ui_GroupBox(object):
     def retranslateUi(self, GroupBox):
         GroupBox.setWindowTitle(QCoreApplication.translate("GroupBox", u"GroupBox", None))
         self.return_button.setText(QCoreApplication.translate("GroupBox", u"\u2b60\u041d\u0430\u0437\u0430\u0434", None))
-        self.plainTextEdit.setPlainText("")
-        self.plainTextEdit.setPlaceholderText(QCoreApplication.translate("GroupBox", u"\u041f\u043e\u0438\u0441\u043a...", None))
+        self.search_field.setPlaceholderText(QCoreApplication.translate("GroupBox", u"\u041f\u043e\u0438\u0441\u043a...", None))
         self.clear_search_button.setText("")
         self.search_button.setText("")
     # retranslateUi

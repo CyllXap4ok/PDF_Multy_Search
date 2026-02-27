@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>550</height>
+    <width>176</width>
+    <height>16</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,14 +28,14 @@
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
     <size>
-     <width>727</width>
-     <height>550</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="baseSize">
     <size>
-     <width>727</width>
-     <height>550</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">

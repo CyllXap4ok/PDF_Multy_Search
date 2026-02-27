@@ -24,23 +24,23 @@ class Ui_file_selection_screen(object):
     def setupUi(self, file_selection_screen):
         if not file_selection_screen.objectName():
             file_selection_screen.setObjectName(u"file_selection_screen")
-        file_selection_screen.resize(727, 550)
+        file_selection_screen.resize(719, 546)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(file_selection_screen.sizePolicy().hasHeightForWidth())
         file_selection_screen.setSizePolicy(sizePolicy)
-        file_selection_screen.setMinimumSize(QSize(727, 550))
-        file_selection_screen.setBaseSize(QSize(727, 550))
+        file_selection_screen.setMinimumSize(QSize(0, 0))
+        file_selection_screen.setBaseSize(QSize(0, 0))
         file_selection_screen.setStyleSheet(u"border:none;")
         self.verticalLayout = QVBoxLayout(file_selection_screen)
         self.verticalLayout.setSpacing(5)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(15, 10, 0, 10)
+        self.verticalLayout.setContentsMargins(12, 10, 0, 10)
         self.file_screen_top_bar = QHBoxLayout()
         self.file_screen_top_bar.setSpacing(2)
         self.file_screen_top_bar.setObjectName(u"file_screen_top_bar")
-        self.file_screen_top_bar.setContentsMargins(-1, -1, 16, -1)
+        self.file_screen_top_bar.setContentsMargins(-1, -1, 12, -1)
         self.label = QLabel(file_selection_screen)
         self.label.setObjectName(u"label")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -188,7 +188,44 @@ class Ui_file_selection_screen(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
         self.scrollArea.setSizePolicy(sizePolicy2)
-        self.scrollArea.setFrameShadow(QFrame.Shadow.Sunken)
+        self.scrollArea.setMinimumSize(QSize(707, 450))
+        self.scrollArea.setBaseSize(QSize(707, 450))
+        self.scrollArea.setStyleSheet(u"QScrollBar:vertical {\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    width: 12px;\n"
+"    margin: 0px 3px 0px 4px;\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u0432\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u0441\u043a\u0440\u043e\u043b\u043b\u0431\u0430\u0440\u0430 */\n"
+"QScrollBar::handle:vertical {\n"
+"    background: rgb(60, 60, 60);\n"
+"    min-height: 20px;\n"
+"    border-radius: 2px;\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u043f\u0440\u0438 \u043d\u0430\u0432\u0435\u0434\u0435\u043d\u0438\u0438 */\n"
+"QScrollBar::handle:vertical:hover {\n"
+"    background: rgb(70, 70, 70)\n"
+"}\n"
+"\n"
+"/* \u041f\u043e\u043b\u0437\u0443\u043d\u043e\u043a \u043f\u0440\u0438 \u043d\u0430\u0436\u0430\u0442\u0438\u0438 */\n"
+"QScrollBar::handle:vertical:pressed {\n"
+"    background: rgb(80, 80, 80);\n"
+"}\n"
+"\n"
+"/* \u0421\u0442\u0440\u0435\u043b\u043a\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437 */\n"
+"QScr"
+                        "ollBar::sub-line:vertical, QScrollBar::add-line:vertical {\n"
+"    height: 0px;\n"
+"}\n"
+"\n"
+"/* \u0423\u0431\u0438\u0440\u0430\u0435\u043c \u0444\u043e\u043d \u043c\u0435\u0436\u0434\u0443 \u043f\u043e\u043b\u0437\u0443\u043d\u043a\u043e\u043c \u0438 \u0441\u0442\u0440\u0435\u043b\u043a\u0430\u043c\u0438 */\n"
+"QScrollBar::sub-page:vertical, QScrollBar::add-page:vertical {\n"
+"    background: transparent;\n"
+"}")
+        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea.setFrameShadow(QFrame.Shadow.Plain)
         self.scrollArea.setLineWidth(0)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -196,7 +233,7 @@ class Ui_file_selection_screen(object):
         self.scrollArea.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.files_grid = QWidget()
         self.files_grid.setObjectName(u"files_grid")
-        self.files_grid.setGeometry(QRect(0, 0, 712, 454))
+        self.files_grid.setGeometry(QRect(0, 0, 707, 450))
         sizePolicy.setHeightForWidth(self.files_grid.sizePolicy().hasHeightForWidth())
         self.files_grid.setSizePolicy(sizePolicy)
         self.files_grid.setMinimumSize(QSize(0, 0))
@@ -207,7 +244,7 @@ class Ui_file_selection_screen(object):
 
         self.file_screen_bottom_bar = QHBoxLayout()
         self.file_screen_bottom_bar.setObjectName(u"file_screen_bottom_bar")
-        self.file_screen_bottom_bar.setContentsMargins(-1, -1, 16, -1)
+        self.file_screen_bottom_bar.setContentsMargins(-1, -1, 12, -1)
         self.add_button = QPushButton(file_selection_screen)
         self.add_button.setObjectName(u"add_button")
         self.add_button.setEnabled(True)

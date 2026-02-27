@@ -83,21 +83,20 @@ class FlowLayout(QLayout):
             if widget and not widget.isVisibleTo(self.parentWidget()):
                 continue
 
-            space_x = spacing
-            space_y = spacing
-            next_x = x + item.sizeHint().width() + space_x
+            item_size = item.sizeHint()
 
-            # Если не помещается в текущей строке, переходим на новую
-            if next_x - effective_rect.x() > effective_rect.width() and line_height > 0:
+            # Проверяем перенос строки БЕЗ учета spacing справа
+            if x > effective_rect.x() and \
+                    x + item_size.width() > effective_rect.right() + 1:
                 x = effective_rect.x()
-                y = y + line_height + space_y
-                next_x = x + item.sizeHint().width() + space_x
+                y += line_height + spacing
                 line_height = 0
 
             if not test_only:
-                item.setGeometry(QRect(QPoint(x, y), item.sizeHint()))
+                item.setGeometry(QRect(QPoint(x, y), item_size))
 
-            x = next_x
-            line_height = max(line_height, item.sizeHint().height())
+            # Смещаем x: spacing добавляем только перед следующим элементом
+            x += item_size.width() + spacing
+            line_height = max(line_height, item_size.height())
 
         return y + line_height - rect.y()
