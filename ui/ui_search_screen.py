@@ -16,15 +16,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGroupBox, QHBoxLayout,
-    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
-    QVBoxLayout, QWidget)
+    QLabel, QLineEdit, QPushButton, QScrollArea,
+    QSizePolicy, QVBoxLayout, QWidget)
 import res_rc
 
 class Ui_GroupBox(object):
     def setupUi(self, GroupBox):
         if not GroupBox.objectName():
             GroupBox.setObjectName(u"GroupBox")
-        GroupBox.resize(719, 507)
+        GroupBox.resize(719, 519)
         GroupBox.setMinimumSize(QSize(0, 0))
         GroupBox.setBaseSize(QSize(0, 0))
         GroupBox.setStyleSheet(u"background-color: rgb(30, 30, 30);\n"
@@ -33,7 +33,7 @@ class Ui_GroupBox(object):
         self.verticalLayout = QVBoxLayout(GroupBox)
         self.verticalLayout.setSpacing(5)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(12, 10, 0, 10)
+        self.verticalLayout.setContentsMargins(12, 10, 0, 2)
         self.search_window_top_bar = QHBoxLayout()
         self.search_window_top_bar.setSpacing(5)
         self.search_window_top_bar.setObjectName(u"search_window_top_bar")
@@ -111,6 +111,7 @@ class Ui_GroupBox(object):
 
         self.clear_search_button = QPushButton(self.frame)
         self.clear_search_button.setObjectName(u"clear_search_button")
+        self.clear_search_button.setEnabled(False)
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
@@ -213,6 +214,44 @@ class Ui_GroupBox(object):
 
         self.verticalLayout.addWidget(self.scrollArea)
 
+        self.groupBox = QGroupBox(GroupBox)
+        self.groupBox.setObjectName(u"groupBox")
+        sizePolicy1.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
+        self.groupBox.setSizePolicy(sizePolicy1)
+        self.groupBox.setMinimumSize(QSize(0, 15))
+        self.groupBox.setMaximumSize(QSize(16777215, 15))
+        self.groupBox.setBaseSize(QSize(0, 15))
+        self.horizontalLayout_5 = QHBoxLayout(self.groupBox)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 12, 0)
+        self.progress_text = QLabel(self.groupBox)
+        self.progress_text.setObjectName(u"progress_text")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.progress_text.sizePolicy().hasHeightForWidth())
+        self.progress_text.setSizePolicy(sizePolicy3)
+        self.progress_text.setMinimumSize(QSize(0, 15))
+        self.progress_text.setBaseSize(QSize(0, 15))
+        self.progress_text.setStyleSheet(u"color:rgb(120, 120, 120);")
+
+        self.horizontalLayout_5.addWidget(self.progress_text, 0, Qt.AlignmentFlag.AlignLeft)
+
+        self.matches_text = QLabel(self.groupBox)
+        self.matches_text.setObjectName(u"matches_text")
+        sizePolicy1.setHeightForWidth(self.matches_text.sizePolicy().hasHeightForWidth())
+        self.matches_text.setSizePolicy(sizePolicy1)
+        self.matches_text.setMinimumSize(QSize(0, 15))
+        self.matches_text.setMaximumSize(QSize(16777215, 15))
+        self.matches_text.setBaseSize(QSize(0, 15))
+        self.matches_text.setStyleSheet(u"color:rgb(120, 120, 120);")
+
+        self.horizontalLayout_5.addWidget(self.matches_text, 0, Qt.AlignmentFlag.AlignRight)
+
+
+        self.verticalLayout.addWidget(self.groupBox)
+
 
         self.retranslateUi(GroupBox)
 
@@ -225,5 +264,8 @@ class Ui_GroupBox(object):
         self.search_field.setPlaceholderText(QCoreApplication.translate("GroupBox", u"\u041f\u043e\u0438\u0441\u043a...", None))
         self.clear_search_button.setText("")
         self.search_button.setText("")
+        self.groupBox.setTitle("")
+        self.progress_text.setText("")
+        self.matches_text.setText("")
     # retranslateUi
 

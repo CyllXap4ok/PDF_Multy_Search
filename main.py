@@ -5,9 +5,9 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QStackedWidget
 )
 
-from file_selection_screen import FileSelectionScreen
-from search_screen import SearchScreen
 from ui.ui_main_window import Ui_MainWindow
+from view_model.file_selection_screen import FileSelectionScreen
+from view_model.search_screen import SearchScreen
 
 
 class AnimatedStackedWidget(QStackedWidget):
@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setWindowTitle("PDF Manager")
+        self.setWindowTitle("DocSearch")
 
         # Создаем анимированный stacked widget
         self.stacked_widget = AnimatedStackedWidget()

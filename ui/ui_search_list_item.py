@@ -15,26 +15,28 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QSizePolicy,
+    QVBoxLayout, QWidget)
 
 class Ui_search_list_item(object):
     def setupUi(self, search_list_item):
         if not search_list_item.objectName():
             search_list_item.setObjectName(u"search_list_item")
-        search_list_item.resize(695, 40)
-        search_list_item.setMinimumSize(QSize(695, 40))
-        search_list_item.setBaseSize(QSize(695, 40))
+        search_list_item.resize(695, 60)
+        search_list_item.setMinimumSize(QSize(695, 60))
+        search_list_item.setBaseSize(QSize(695, 60))
         font = QFont()
         font.setUnderline(False)
         search_list_item.setFont(font)
         search_list_item.setFrameShape(QFrame.Shape.NoFrame)
+        search_list_item.setLineWidth(0)
         self.verticalLayout = QVBoxLayout(search_list_item)
-        self.verticalLayout.setSpacing(5)
+        self.verticalLayout.setSpacing(8)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.file_name = QLabel(search_list_item)
         self.file_name.setObjectName(u"file_name")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
@@ -52,11 +54,7 @@ class Ui_search_list_item(object):
         self.file_name.setFont(font1)
         self.file_name.setStyleSheet(u"")
 
-        self.horizontalLayout.addWidget(self.file_name)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
+        self.verticalLayout_2.addWidget(self.file_name)
 
         self.occurrence_counter = QLabel(search_list_item)
         self.occurrence_counter.setObjectName(u"occurrence_counter")
@@ -71,13 +69,18 @@ class Ui_search_list_item(object):
         self.occurrence_counter.setFont(font2)
         self.occurrence_counter.setStyleSheet(u"color:rgb(120, 120, 120)")
 
-        self.horizontalLayout.addWidget(self.occurrence_counter)
+        self.verticalLayout_2.addWidget(self.occurrence_counter)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout.addLayout(self.verticalLayout_2)
 
         self.search_cards = QWidget(search_list_item)
         self.search_cards.setObjectName(u"search_cards")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.search_cards.sizePolicy().hasHeightForWidth())
+        self.search_cards.setSizePolicy(sizePolicy1)
         self.search_cards.setMinimumSize(QSize(695, 0))
         self.search_cards.setBaseSize(QSize(695, 0))
         font3 = QFont()
