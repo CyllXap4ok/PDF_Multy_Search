@@ -6,7 +6,8 @@ from PySide6.QtWidgets import (
 )
 
 from document_service.document import Document
-from document_service.opening_service.document_opening_service import DocumentOpeningService
+from document_service.open_service.document_opening_service import DocumentOpeningService
+from document_service.open_service.open_strategy.default_strategy import DefaultDocumentOpenStrategy
 from flow_layout import FlowLayout
 from ui.ui_file_card import Ui_file_card
 from ui.ui_file_selection_screen import Ui_file_selection_screen
@@ -126,6 +127,9 @@ class FileSelectionScreen(QGroupBox):
         self.documents: list[Document] = []
         self.file_cards = []
 
+        self.document_open_service = DocumentOpeningService()
+        self.document_open_service.set_strategy(DefaultDocumentOpenStrategy())
+
         self.ui.add_button.clicked.connect(self.add_files)
         self.ui.select_all_button.clicked.connect(self.toggle_select_all)
         self.ui.selection_cancel_button.clicked.connect(self.cancel_selection)
@@ -162,7 +166,7 @@ class FileSelectionScreen(QGroupBox):
     def add_file_card(self, doc: Document):
         card = FileCard(doc)
         card.selection_changed_signal.connect(self.on_card_selection_changed)
-        card.double_clicked_signal.connect(DocumentOpeningService.open_file)
+        card.double_clicked_signal.connect(self.document_open_service.open_document)
         card.delete_signal.connect(self.delete_card)
 
         # Добавляем карточку в flow_layout

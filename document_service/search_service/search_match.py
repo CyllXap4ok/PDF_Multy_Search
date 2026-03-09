@@ -1,24 +1,37 @@
 from dataclasses import dataclass
-from typing import Dict, Any
 
-from document_service.parsing_service.doc_fragment import DocElementMetadataType, ElementType
-from document_service.document import FileType
+from document_service.document import Document
 
 
 @dataclass
 class MatchContext:
-    context_before: str
-    context_after: str
+    before: str
+    after: str
 
 
 @dataclass
 class SearchMatch:
-    matched_text: str
+    query: str
     context: MatchContext
+    from_document: Document
+    document_page: int
 
-    position_within_element: int
-    from_element: ElementType
-    element_metadata: Dict[DocElementMetadataType, Any]
+    def to_dict(self) -> dict:
+        return {
+            "query": self.query,
+            "context": {
+                "before": self.context.before,
+                "after": self.context.after,
+            },
+            "from_document": self.from_document.file_path,
+            "document_page": self.document_page
+        }
 
-    file_path: str
-    file_type: FileType
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            query=data["query"],
+            context=MatchContext(data["context"]["before"], data["context"]["after"]),
+            from_document=Document(data["from_document"]),
+            document_page=data["document_page"]
+        )

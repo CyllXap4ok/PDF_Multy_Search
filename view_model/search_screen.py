@@ -8,10 +8,10 @@ from PySide6.QtWidgets import (
 )
 
 from document_service.document import Document
-from document_service.opening_service.document_opening_service import DocumentOpeningService
-from document_service.parsing_service.doc_fragment import DocElementMetadataType
-from document_service.search_service.doc_search_service import DocumentSearchService
+from document_service.open_service.document_opening_service import DocumentOpeningService
+from document_service.open_service.open_strategy.pdf_open_strategy import PdfHighlightedOpenStrategy
 from document_service.search_service.search_match import SearchMatch
+from document_service.search_service.search_process_manager import DocumentSearchProcessManager
 from flow_layout import FlowLayout
 from ui.ui_search_card import Ui_search_card
 from ui.ui_search_list_item import Ui_search_list_item
@@ -29,12 +29,12 @@ class MatchCard(QFrame):
         self.match = match
 
         highlighted_text = self.highlight_match(
-            match.matched_text,
-            match.context.context_before,
-            match.context.context_after
+            match.query,
+            match.context.before,
+            match.context.after
         )
 
-        self.ui.occurrence_page_number.setText(f"📄 Страница №{match.element_metadata.get(DocElementMetadataType.PAGE_NUMBER)}")
+        self.ui.occurrence_page_number.setText(f"📄 Страница №{match.document_page}")
         self.ui.occurrence_text.setText(highlighted_text)
 
     def highlight_match(self, match: str, context_before: str, context_after: str):
@@ -90,38 +90,47 @@ class SearchWorker(QThread):
     query: str
     documents: list[Document]
 
-    file_search_started = Signal(object)
-    file_search_finished = Signal(object, list)
-    fragment_search_finished = Signal(float)
-    match_found = Signal()
+    document_search_started = Signal(object)
+    document_search_finished = Signal(object, list)
+    document_search_progress = Signal(object, float)
+    matches_found = Signal(object, list)
 
-    def __init__(self):
+    def __init__(self, search_process_manager: DocumentSearchProcessManager):
         super().__init__()
-        self.search_service = DocumentSearchService(
-            self.fragment_search_finished_callback,
-            self.match_found_callback
-        )
-        self._is_running = True
+        search_process_manager.set_document_search_started_callback(self.document_search_started_callback)
+        search_process_manager.set_document_search_finished_callback(self.document_search_finished_callback)
+        search_process_manager.set_document_search_progress_callback(self.document_search_progress_callback)
+        search_process_manager.set_matches_found_callback(self.matches_found_callback)
+
+        self.search_process_manager = search_process_manager
+        self.processed_files_counter = 0
+        self._is_searching = False
 
     def run(self):
-        self._is_running = True
-        for doc in self.documents:
-            if not self._is_running:
-                break
+        self._is_searching = True
+        self.processed_files_counter = 0
+        self.search_process_manager.submit_tasks(self.query, self.documents)
 
-            self.file_search_started.emit(doc)
+        while self._is_searching:
+            self.search_process_manager.handle_pending_results(0.1)
 
-            search_matches: list[SearchMatch] = self.search_service.search(
-                query=self.query,
-                file_path=doc.file_path,
-                file_type=doc.file_type,
-                context_length=250,
-                max_workers=os.cpu_count()
-            )
+    def document_search_started_callback(self, document: Document):
+        self.document_search_started.emit(document)
 
-            if self._is_running:
-                self.file_search_finished.emit(doc, search_matches)
-                self.msleep(max(50, len(search_matches) * 10))
+    def document_search_finished_callback(self, document: Document, matches: list[SearchMatch]):
+        self.processed_files_counter += 1
+        if self.processed_files_counter == len(self.documents): self._is_searching = False
+        self.document_search_finished.emit(document, matches)
+
+    def document_search_progress_callback(self, document: Document, progress: int):
+        self.document_search_progress.emit(document, progress)
+
+    def matches_found_callback(self, document: Document, matches: list[SearchMatch]):
+        self.matches_found.emit(document, matches)
+
+    def stop_searching(self):
+        self._is_searching = False
+        self.search_process_manager.stop_searching()
 
     def set_query(self, query: str):
         self.query = query
@@ -129,26 +138,16 @@ class SearchWorker(QThread):
     def set_documents(self, documents: list[Document]):
         self.documents = documents
 
-    def fragment_search_finished_callback(self, progress: float):
-        self.fragment_search_finished.emit(progress)
-
-    def match_found_callback(self):
-        self.match_found.emit()
-
-    def stop(self):
-        self._is_running = False
-
 
 class SearchScreen(QGroupBox):
     back_clicked = Signal()
 
-    def __init__(self, documents: list[Document]=None, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_GroupBox()
         self.ui.setupUi(self)
 
-        if documents is None: self.documents = []
-        else: self.documents = documents
+        self.documents = []
 
         # Устанавливаем layout для списка
         self.search_list_layout = QVBoxLayout()
@@ -157,11 +156,12 @@ class SearchScreen(QGroupBox):
         self.ui.search_list.setLayout(self.search_list_layout)
 
         # Поиск
-        self.is_searching = False
         self.search_results: dict[Document, list[SearchMatch]] = {}
         self.matches_count = 0
+        search_process_manager = DocumentSearchProcessManager() # Создаем менеджер процессов поиска
+        search_process_manager.start_process_pool() # Запускаем фоновые процессы поиска, ожидающие задачи
+        self.searcher = SearchWorker(search_process_manager) # Передаем менеджер процессов исполнителю
         self.search_progress = SearchProgress()
-        self.searcher = SearchWorker()
 
         # Устанавливаем действия для кнопок
         self.setup_connections()
@@ -180,13 +180,10 @@ class SearchScreen(QGroupBox):
         self.ui.clear_search_button.clicked.connect(self.clear_search)
 
         # Назначаем колбэки поисковика
-        self.searcher.file_search_started.connect(self.file_search_started)
-        self.searcher.file_search_finished.connect(self.file_search_finished)
-        self.searcher.fragment_search_finished.connect(self.fragment_search_finished)
-        self.searcher.match_found.connect(self.match_found_callback)
-
-    def set_file_paths(self, documents: list[Document]):
-        self.documents = documents
+        self.searcher.document_search_started.connect(self.document_search_started)
+        self.searcher.document_search_finished.connect(self.document_search_finished)
+        self.searcher.document_search_progress.connect(self.document_search_progress)
+        self.searcher.matches_found.connect(self.matches_found)
 
     def start_searching(self):
         query = self.ui.search_field.text().strip()
@@ -195,8 +192,6 @@ class SearchScreen(QGroupBox):
 
         # Очищаем предыдущие результаты
         self.clear_results()
-
-        self.is_searching = True
 
         # Устанавливаем видимость и заполняем необходимые поля
         self.search_progress.set_files_count(len(self.documents))
@@ -217,43 +212,40 @@ class SearchScreen(QGroupBox):
         self.ui.clear_search_button.setEnabled(has_text)
 
     def on_match_card_double_clicked(self, match: SearchMatch):
-        file_path = match.file_path
-        page = match.element_metadata.get(DocElementMetadataType.PAGE_NUMBER)
-        self.doc_open_service.open_file(file_path)
+        query = match.query
+        page = match.document_page
+        document = match.from_document
+        self.doc_open_service.set_strategy(PdfHighlightedOpenStrategy(query, page))
+        self.doc_open_service.open_document(document)
 
-    def file_search_started(self, doc: Document):
-        if self.is_searching:
-            self.search_progress.set_current_file(doc.file_name)
-            self.search_progress.increment_file_num()
-            self.ui.progress_text.setText(self.search_progress.to_string())
+    def document_search_started(self, document: Document):
+        self.search_progress.increment_file_num()
+        self.ui.progress_text.setText(self.search_progress.to_string())
 
-    def file_search_finished(self, doc: Document, search_matches: list[SearchMatch]):
-        if self.is_searching:
-            if search_matches:
-                # Создаем элемент списка и добавляем все карточки вхождений
-                file_list_item = SearchListItem(doc.file_name, search_matches)
-                for match in search_matches:
-                    card = MatchCard(match)
-                    card.double_click_signal.connect(self.on_match_card_double_clicked)
-                    file_list_item.add_match(card)
+    def document_search_finished(self, doc: Document, search_matches: list[SearchMatch]):
+        if search_matches:
+            # Создаем элемент списка и добавляем все карточки вхождений
+            file_list_item = SearchListItem(doc.file_name, search_matches)
+            for match in search_matches:
+                card = MatchCard(match)
+                card.double_click_signal.connect(self.on_match_card_double_clicked)
+                file_list_item.add_match(card)
 
-                self.search_list_layout.addWidget(file_list_item)
-                self.search_results[doc] = search_matches
+            self.search_list_layout.addWidget(file_list_item)
+            self.search_results[doc] = search_matches
 
-            if self.search_progress.current_file_num == len(self.documents):
-                self.is_searching = False
-
-    def fragment_search_finished(self, progress: float):
+    def document_search_progress(self, document: Document, progress: float):
         pass
 
-    def match_found_callback(self):
-        if self.is_searching:
-            self.matches_count += 1
-            self.ui.matches_text.setText(f"Найдено вхождений: {self.matches_count}")
+    def matches_found(self, document: Document, matches: list[SearchMatch]):
+        self.matches_count += len(matches)
+        self.ui.matches_text.setText(f"Найдено вхождений: {self.matches_count}")
 
     def stop_searching(self):
-        self.is_searching = False
-        self.searcher.stop()
+        self.searcher.stop_searching()
+
+    def set_documents(self, documents: list[Document]):
+        self.documents = documents
 
     def clear_results(self):
         self.stop_searching()

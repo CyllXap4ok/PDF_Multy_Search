@@ -1,8 +1,8 @@
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 
 
-class FileType(Enum):
+class DocumentType(Enum):
     PDF = ("PDF", ".pdf")
     DOCX = ("DOCX", ".docx")
     TXT = ("TXT", ".txt")
@@ -12,7 +12,7 @@ class FileType(Enum):
         self.extension = extension
 
     @classmethod
-    def from_extension(cls, extension: str) -> 'FileType':
+    def from_extension(cls, extension: str) -> 'DocumentType':
         """Определяет FileType по расширению файла"""
         for file_type in cls:
             if file_type.extension == extension.lower():
@@ -27,4 +27,4 @@ class Document:
 
         self.file_name = path.name
         self.file_path = file_path
-        self.file_type = FileType.from_extension(path.suffix)
+        self.document_type = DocumentType.from_extension(path.suffix)

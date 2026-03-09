@@ -1,3 +1,4 @@
+import multiprocessing
 import sys
 
 from PySide6.QtCore import QEasingCurve, QVariantAnimation
@@ -5,6 +6,8 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QStackedWidget
 )
 
+from document_service.document import Document
+from document_service.search_service.search_process_manager import DocumentSearchProcessManager
 from ui.ui_main_window import Ui_MainWindow
 from view_model.file_selection_screen import FileSelectionScreen
 from view_model.search_screen import SearchScreen
@@ -107,8 +110,8 @@ class MainWindow(QMainWindow):
         # Показываем первый экран
         self.stacked_widget.setCurrentWidget(self.file_selection_screen)
 
-    def switch_to_search_screen(self, file_paths: list[str]):
-        self.search_screen.set_file_paths(file_paths)
+    def switch_to_search_screen(self, docs: list[Document]):
+        self.search_screen.set_documents(docs)
         self.stacked_widget.slide_in_left(self.search_screen)
 
     def switch_to_file_selection_screen(self):
@@ -123,4 +126,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if hasattr(sys, 'frozen'):
+        multiprocessing.freeze_support()
     main()
