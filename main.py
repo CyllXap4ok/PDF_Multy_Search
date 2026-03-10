@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
 )
 
 from document_service.document import Document
-from document_service.search_service.search_process_manager import DocumentSearchProcessManager
 from ui.ui_main_window import Ui_MainWindow
 from view_model.file_selection_screen import FileSelectionScreen
 from view_model.search_screen import SearchScreen

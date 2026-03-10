@@ -28,3 +28,9 @@ class Document:
         self.file_name = path.name
         self.file_path = file_path
         self.document_type = DocumentType.from_extension(path.suffix)
+
+    def __eq__(self, other):
+        name_eq = self.file_name == other.file_name
+        path_eq = self.file_path == other.file_path
+        type_eq = self.document_type == other.document_type
+        return name_eq and path_eq and type_eq

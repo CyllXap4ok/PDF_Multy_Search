@@ -16,7 +16,7 @@ from flow_layout import FlowLayout
 from ui.ui_search_card import Ui_search_card
 from ui.ui_search_list_item import Ui_search_list_item
 from ui.ui_search_screen import Ui_GroupBox
-from view_model.search_progress_data import SearchProgress
+from search_progress_data import SearchProgress
 
 
 class MatchCard(QFrame):

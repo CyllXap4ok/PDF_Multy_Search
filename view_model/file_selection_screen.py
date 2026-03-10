@@ -104,7 +104,7 @@ class FileCard(QFrame):
             self.double_clicked_signal.emit(self.doc)
         super().mouseDoubleClickEvent(event)
 
-    def get_document(self):
+    def get_document(self) -> Document:
         return self.doc
 
     def delete_card(self):
@@ -124,8 +124,7 @@ class FileSelectionScreen(QGroupBox):
         self.ui.delete_button.hide()
         self.ui.button_next.setEnabled(False)
 
-        self.documents: list[Document] = []
-        self.file_cards = []
+        self.file_cards: list[FileCard] = []
 
         self.document_open_service = DocumentOpeningService()
         self.document_open_service.set_strategy(DefaultDocumentOpenStrategy())
@@ -133,8 +132,8 @@ class FileSelectionScreen(QGroupBox):
         self.ui.add_button.clicked.connect(self.add_files)
         self.ui.select_all_button.clicked.connect(self.toggle_select_all)
         self.ui.selection_cancel_button.clicked.connect(self.cancel_selection)
-        self.ui.delete_button.clicked.connect(self.delete_selected)
-        self.ui.button_next.clicked.connect(lambda: self.next_clicked.emit(self.documents))
+        self.ui.delete_button.clicked.connect(self.delete_selected_cards)
+        self.ui.button_next.clicked.connect(lambda: self.next_clicked.emit([card.get_document() for card in self.file_cards]))
 
         self.is_selection_state = False
 
@@ -152,10 +151,9 @@ class FileSelectionScreen(QGroupBox):
         )
 
         for file_path in files:
-            if not file_path in [doc.file_path for doc in self.documents]:
-                document = Document(file_path)
+            document = Document(file_path)
+            if not document in [card.get_document() for card in self.file_cards]:
                 self.add_file_card(document)
-                self.documents.append(document)
 
         files_count = len(self.file_cards)
         if files_count > 0:
@@ -167,7 +165,7 @@ class FileSelectionScreen(QGroupBox):
         card = FileCard(doc)
         card.selection_changed_signal.connect(self.on_card_selection_changed)
         card.double_clicked_signal.connect(self.document_open_service.open_document)
-        card.delete_signal.connect(self.delete_card)
+        card.delete_signal.connect(self.delete_single_card)
 
         # Добавляем карточку в flow_layout
         self.files_grid.addWidget(card)
@@ -176,7 +174,7 @@ class FileSelectionScreen(QGroupBox):
         # Обновляем счетчик
         self.ui.label.setText("Добавлено файлов - " + str(len(self.file_cards)))
 
-    def delete_card(self, card: FileCard):
+    def delete_single_card(self, card: FileCard):
         reply = QMessageBox.question(
             self,
             "Подтверждение",
@@ -192,7 +190,7 @@ class FileSelectionScreen(QGroupBox):
 
             if len(self.file_cards) == 0: self.ui.button_next.setEnabled(False)
 
-    def delete_selected(self):
+    def delete_selected_cards(self):
         reply = QMessageBox.question(
             self,
             "Подтверждение",
@@ -208,8 +206,9 @@ class FileSelectionScreen(QGroupBox):
                 card.delete_card()
 
             self.set_selection_state(False)
-            if len(self.file_cards) == 0: self.ui.button_next.setEnabled(False)
-            self.ui.label.setText("Добавлено файлов - " + str(len(self.file_cards)))
+            file_cards_amount = len(self.file_cards)
+            self.ui.label.setText("Добавлено файлов - " + str(file_cards_amount))
+            if file_cards_amount == 0: self.ui.button_next.setEnabled(False)
 
     def on_card_selection_changed(self):
         if not self.is_selection_state:
