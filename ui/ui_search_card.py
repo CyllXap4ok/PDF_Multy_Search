@@ -22,9 +22,9 @@ class Ui_search_card(object):
     def setupUi(self, search_card):
         if not search_card.objectName():
             search_card.setObjectName(u"search_card")
-        search_card.resize(225, 50)
-        search_card.setMinimumSize(QSize(225, 50))
-        search_card.setMaximumSize(QSize(225, 16777215))
+        search_card.resize(350, 145)
+        search_card.setMinimumSize(QSize(350, 0))
+        search_card.setMaximumSize(QSize(550, 16777215))
         search_card.setBaseSize(QSize(225, 50))
         search_card.setStyleSheet(u"QFrame {\n"
 "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(70, 70, 70, 255));\n"
@@ -37,7 +37,7 @@ class Ui_search_card(object):
         self.verticalLayout = QVBoxLayout(search_card)
         self.verticalLayout.setSpacing(3)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(3, 3, 3, 3)
+        self.verticalLayout.setContentsMargins(3, 5, 3, 5)
         self.occurrence_page_number = QLabel(search_card)
         self.occurrence_page_number.setObjectName(u"occurrence_page_number")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)

@@ -1,10 +1,9 @@
 import html
-import os
 
 from PySide6.QtCore import Signal, Qt, QThread
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import (
-    QFrame, QVBoxLayout, QGroupBox
+    QFrame, QVBoxLayout, QGroupBox, QWidget
 )
 
 from document_service.document import Document
@@ -13,10 +12,10 @@ from document_service.open_service.open_strategy.pdf_open_strategy import PdfHig
 from document_service.search_service.search_match import SearchMatch
 from document_service.search_service.search_process_manager import DocumentSearchProcessManager
 from flow_layout import FlowLayout
-from ui.ui_search_card import Ui_search_card
-from ui.ui_search_list_item import Ui_search_list_item
-from ui.ui_search_screen import Ui_GroupBox
 from search_progress_data import SearchProgress
+from ui.ui_search_card import Ui_search_card
+from ui.ui_search_file_item import Ui_search_file_item
+from ui.ui_search_screen import Ui_GroupBox
 
 
 class MatchCard(QFrame):
@@ -58,32 +57,27 @@ class MatchCard(QFrame):
             self.double_click_signal.emit(self.match)
 
 
-class SearchListItem(QFrame):
+class SearchFileItem(QWidget):
 
-    def __init__(self, filename: str, occurrences: list, parent=None):
+    matches = 0
+
+    def __init__(self, document: Document, parent=None):
         super().__init__(parent)
-        self.ui = Ui_search_list_item()
+        self.ui = Ui_search_file_item()
         self.ui.setupUi(self)
 
-        self.ui.file_name.setText(self._format_filename(filename))
-        self.ui.occurrence_counter.setText(f"Найдено вхождений: {len(occurrences)}")
+        self.ui.file_name = document.file_name
+        self.ui.file_type = document.document_type.extension
 
-        # Создаем FlowLayout для карточек
-        self.cards_flow_grid = FlowLayout(self.ui.search_cards, spacing=10)
-        self.ui.search_cards.setLayout(self.cards_flow_grid)
+    def set_search_status(self, new_status: str):
+        self.ui.search_status.setText(new_status)
 
-    def add_match(self, match_card: MatchCard):
-        self.cards_flow_grid.addWidget(match_card)
+    def increase_match_count(self):
+        self.matches += 1
+        self.ui.match_count.setText(str(self.matches))
 
-    def _format_filename(self, filename: str) -> str:
-        if len(filename) <= 30:
-            return filename
-
-        name, ext = os.path.splitext(filename)
-        if len(name) > 30:
-            name = name[:27] + "..."
-
-        return f"{name}{ext}"
+    def set_match_count(self, new_count: int):
+        self.ui.match_count.setText(str(new_count))
 
 
 class SearchWorker(QThread):
@@ -149,11 +143,15 @@ class SearchScreen(QGroupBox):
 
         self.documents = []
 
-        # Устанавливаем layout для списка
-        self.search_list_layout = QVBoxLayout()
-        self.search_list_layout.setContentsMargins(0, 0, 0, 0)
-        self.search_list_layout.setSpacing(10)
-        self.ui.search_list.setLayout(self.search_list_layout)
+        self.scroll_widget = QWidget()
+        self.documents_list_layout = QVBoxLayout(self.scroll_widget)
+        self.documents_list_layout.setContentsMargins(0, 0, 0, 0)
+        self.documents_list_layout.setSpacing(0)
+        self.ui.documents_scroll_area.setWidget(self.scroll_widget)
+
+        self.matches_scroll_container = QWidget()
+        self.matches_grid = FlowLayout(self.matches_scroll_container)
+        self.ui.search_results_scroll_area.setWidget(self.matches_scroll_container)
 
         # Поиск
         self.search_results: dict[Document, list[SearchMatch]] = {}
@@ -246,6 +244,9 @@ class SearchScreen(QGroupBox):
 
     def set_documents(self, documents: list[Document]):
         self.documents = documents
+        for doc in documents:
+            self.documents_list_layout.addWidget(SearchFileItem(doc))
+
 
     def clear_results(self):
         self.stop_searching()
